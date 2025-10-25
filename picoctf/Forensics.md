@@ -83,35 +83,56 @@ picoCTF{h1dd3n_1n_pLa1n_51GHT_18375919}
 
 ## Solution:
 
-- Include as many steps as you can with your thought process
-- You **must** include images such as screenshots wherever relevant.
+- I downloaded the file and tried using `file` on it
+- It didn't give any info so I tried catting it, which gave redundant stuff too
+- Decided to check metadata using `exiftool`, this showed it is a `BMP` file
+- Even strings gave out useless results
+- So I decided to hexdump and found few changes from a normal BMP file header
+- Decided to open file using `hexedit` and checked the DIB header part specifically
+- Wikipedia mentions it should be `28 00 00 00`, but here it was:
+<img width="1718" height="162" alt="image" src="https://github.com/user-attachments/assets/1a81fd8d-cc44-4a82-9ea3-f518467b06c2" />
 
-```
-put codes & terminal outputs here using triple backticks
+- So I changed that
+- Later noticed similar issue in BMP header part:
+<img width="1698" height="111" alt="image" src="https://github.com/user-attachments/assets/0cd9571c-1a07-4e36-a055-8cc0c6856df9" />
 
-you may also use ```python for python codes for example
-```
+- So I changed it to `36 00 00 00` according to wikipedia
+- Even after all this, nothing worked :(
+- I decided to mess again with headers but it didn't help
+- The opened image did look a bit weird and smaller, so I decided to recheck the metadata
+- The size in metadata and photos app weren't matching
+- Metadata mentioned `1134x1074` but photos app showed `1134x306`
+- Decided to change width a bit here and there:
+<img width="1602" height="72" alt="image" src="https://github.com/user-attachments/assets/42501ef9-18a0-4671-a9ae-1a1660b15fd7" />
+
+- Used a decimal to hex convertor and thus changed `32 01` to `32 04` for 1074 value. But this gave error too ;-;
+- Decided to do a little smaller and went with `32 03`
+- This worked and showed me the flag:
+[tunn3l_v1s10n.bmp](https://github.com/user-attachments/files/23144287/tunn3l_v1s10n.bmp)
+
 
 ## Flag:
 
 ```
-picoCTF{}
+picoCTF{qu1t3_a_v13w_2020}
 ```
 
 ## Concepts learnt:
 
-- Include the new topics you've come across and explain them in brief
-- 
+- Learnt how to use `hexedit`
+- Learnt how to read basic hex and edit it a bit here and there
+- Learnt a bit about header of files
 
 ## Notes:
 
-- Include any alternate tangents you went on while solving the challenge, including mistakes & other solutions you found.
-- 
+- This challenge in particular was very tricky cause I didn't understand hex codes at all
+- Nothing was very obvious, so had to take help from lot of searchese online
+- Wikipedia was extremely helpful!!
 
 ## Resources:
 
-- Include the resources you've referred to with links. [example hyperlink](https://google.com)
-
+- [Wikipedia page on BMP file](https://en.wikipedia.org/wiki/BMP_file_format)
+- Man page of `hexedit`
 
 ***
 
