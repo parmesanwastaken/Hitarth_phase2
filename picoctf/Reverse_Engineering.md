@@ -115,34 +115,84 @@ picoCTF{0000004d}
 
 ## Solution:
 
-- Include as many steps as you can with your thought process
-- You **must** include images such as screenshots wherever relevant.
+- I downloaded the file and decided to look source code
+- I opened the `VaultDoor3.java` in vscode and got:
+```java
+import java.util.*;
+
+class VaultDoor3 {
+    public static void main(String args[]) {
+        VaultDoor3 vaultDoor = new VaultDoor3();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+	String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+	if (vaultDoor.checkPassword(input)) {
+	    System.out.println("Access granted.");
+	} else {
+	    System.out.println("Access denied!");
+        }
+    }
+
+    // Our security monitoring team has noticed some intrusions on some of the
+    // less secure doors. Dr. Evil has asked me specifically to build a stronger
+    // vault door to protect his Doomsday plans. I just *know* this door will
+    // keep all of those nosy agents out of our business. Mwa ha!
+    //
+    // -Minion #2671
+    public boolean checkPassword(String password) {
+        if (password.length() != 32) {
+            return false;
+        }
+        char[] buffer = new char[32];
+        int i;
+        for (i=0; i<8; i++) {
+            buffer[i] = password.charAt(i);
+        }
+        for (; i<16; i++) {
+            buffer[i] = password.charAt(23-i);
+        }
+        for (; i<32; i+=2) {
+            buffer[i] = password.charAt(46-i);
+        }
+        for (i=31; i>=17; i-=2) {
+            buffer[i] = password.charAt(i);
+        }
+        String s = new String(buffer);
+        return s.equals("jU5t_a_sna_3lpm12g94c_u_4_m7ra41");
+    }
+}
 
 ```
-put codes & terminal outputs here using triple backticks
-
-you may also use ```python for python codes for example
-```
+- I analysed the loops:
+- `for (i=0; i<8; i++) {
+            buffer[i] = password.charAt(i);` meant it just copy pastes first 8 characters
+- `for (; i<16; i++) {
+            buffer[i] = password.charAt(23-i);` meant it reversed the characters (from 8-15)
+- `for (; i<32; i+=2) {
+            buffer[i] = password.charAt(46-i);` meant reversed characters at even intervals (from 16-30)
+- `for (i=31; i>=17; i-=2) {
+            buffer[i] = password.charAt(i);` meant reversed characters (from 17-31)
 
 ## Flag:
 
 ```
-picoCTF{}
+picoCTF{jU5t_a_s1mpl3_an4gr4m_4_u_c79a21}
 ```
 
 ## Concepts learnt:
 
-- Include the new topics you've come across and explain them in brief
-- 
+- Learnt how to see source code of java file
+- Leanrt how to understand loops in java and reverse the algorithm
 
 ## Notes:
 
-- Include any alternate tangents you went on while solving the challenge, including mistakes & other solutions you found.
-- 
+- At first I was confused how exactly to reverse the loops, then searched a bit on basics of Java loops, understood them and figured it out.
 
 ## Resources:
 
-- Include the resources you've referred to with links. [example hyperlink](https://google.com)
+- [Java For Loop Basics](https://www.w3schools.com/java/java_for_loop.asp)
+- [VS Code](https://code.visualstudio.com/)
 
 
 ***
