@@ -370,37 +370,123 @@ FCSC{b1dee4eeadf6c4e60aeb142b0b486344e64b12b40d1046de95c89ba5e23a9925}
 
 ***
 
-# 3. Challenge name
+# 3. Bare Metal Alchemist
 
-> Put in the challenge's description here
+> my friend recommended me this anime but i think i've heard a wrong name.
 
 ## Solution:
 
-- Include as many steps as you can with your thought process
-- You **must** include images such as screenshots wherever relevant.
-
+- First I installed the file `firmware` and used `file` on it
+- Found out it is: `firmware: ELF 32-bit LSB executable, Atmel AVR 8-bit, version 1 (SYSV), statically linked, with debug_info, not stripped`
+- This meant it is an executable file (for linux), and debug info is not stripped (didn't have use for this info tbh)
+- I now used `cat`, `string` and `binwalk` but that didn't help at all
+- So I decided to use a online decompiler to check source code (it had multiple decompilers: ghidra, binary ninja, reko etc.)
+- Reko showed the following:
 ```
-put codes & terminal outputs here using triple backticks
-
-you may also use ```python for python codes for example
+byte g_b006E = 222; // 006E
+byte g_b007A = 0x96; // 007A
+byte g_b0080 = 0xC9; // 0080
+byte g_b0081 = 0x96; // 0081
+byte g_b00B0 = 0x0D; // 00B0
+byte g_b00B1 = 0x92; // 00B1
+byte g_b00C1 = 0x92; // 00C1
+// 00D4: void z1()
 ```
+- This kind of looked like keys of XOR encryption
+- Single byte XOR is pretty easy to bruteforce, so I decided to try that
+- So we can use a python script for this:
+```
+import re
+
+def xor_data(binary_data, key_byte):
+    """XORs each byte in binary_data with a single key_byte."""
+    return bytes(b ^ key_byte for b in binary_data)
+
+def find_flag():
+    filename = "./firmware"
+    flag_pattern = re.compile(rb"[A-Za-z0-9_]{1,30}\{[A-Za-z0-9_\-\+\=\/\\\.\s]{4,200}\}")
+
+    try:
+        with open(filename, "rb") as f:
+            encrypted_content = f.read()
+    except FileNotFoundError:
+        print(f"'{filename}' not found.")
+        return
+        
+    for key in range(1, 256):
+        decrypted_content = xor_data(encrypted_content, key)
+        match = flag_pattern.search(decrypted_content)
+        if match:
+            print(f"This key matches: {key}")
+            print(f"Flag: {match.group().decode()}")
+
+if __name__ == "__main__":
+    find_flag()
+```
+This gives the output:
+```
+This key matches: 9
+Flag: mfVjelh{VkzzVz}
+This key matches: 11
+Flag: T{ydlyjf
+              TT}
+This key matches: 19
+Flag: LL{vrcLv}
+This key matches: 24
+Flag: GG{lwjkG}
+This key matches: 26
+Flag: lh5{lh/5vsx}
+This key matches: 30
+Flag: Aqh{lxrqiA}
+This key matches: 46
+Flag: ojc{v.ojm.ojm}
+This key matches: 52
+Flag: 4kkqqdf{ykfqs}
+This key matches: 56
+Flag: yt8{tshj8kj}
+This key matches: 57
+Flag: 9mnxtk9mn{k9mnzk9mnjk9mn}
+This key matches: 66
+Flag: HBB{vBALxIyI
+                  Q}
+This key matches: 68
+Flag: W{HFNDD}
+This key matches: 71
+Flag: TxKEMGG{sGDI}
+This key matches: 107
+Flag: mzjyjhcpcNcxnkkkjzk{mzjyjhcpcNcxnkkk}
+This key matches: 109
+Flag: hmmm{mmmom}
+This key matches: 118
+Flag: vv{BvuxL}
+This key matches: 121
+Flag: yy{yyyyy}
+This key matches: 122
+Flag: zzzzzzzzxuzzz{rymzzzx}
+This key matches: 165
+Flag: TFCCTF{Th1s_1s_som3_s1mpl3_4rdu1no_f1rmw4re}
+```
+- Thus we find the flag
+
+
 
 ## Flag:
 
 ```
-picoCTF{}
+TFCCTF{Th1s_1s_som3_s1mpl3_4rdu1no_f1rmw4re}
 ```
 
 ## Concepts learnt:
 
-- Include the new topics you've come across and explain them in brief
-- 
+- Learnt how to bruteforce XOR encryption (especially when it is single byte)
+- Learnt more about ELF files
 
 ## Notes:
 
-- Include any alternate tangents you went on while solving the challenge, including mistakes & other solutions you found.
-- 
+- This was extremely confusing at first as I tried literally everything I could think of, which includes stegnography, reading its strings or compiled code
+- I even went against my own morals and ethics and decided to give it execution perms and executed it, but that gave me an error
 
 ## Resources:
 
-- Include the resources you've referred to with links. [example hyperlink](https://google.com)
+- Info about XOR: https://ctf101.org/cryptography/what-is-xor/
+- Online decompiler (file is retained in url): https://dogbolt.org/?id=3eaba4d3-407f-4b76-b3b0-de51612bf74d#Reko=7&BinaryNinja=25
