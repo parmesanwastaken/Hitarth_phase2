@@ -1,37 +1,35 @@
-# 1. Challenge name
+# 1. IQ 
 
-> Put in the challenge's description here
+> let your input x = 30478191278. wrap your answer with nite{ } for the flag. As an example, entering x = 34359738368 gives (y0, ..., y11), so the flag would be nite{010000000011}.
 
 ## Solution:
 
-- Include as many steps as you can with your thought process
-- You **must** include images such as screenshots wherever relevant.
+- Opened image
+- It had combination of XOR, XNOR, NAND, AND, OR, NOR and NOT gate
+- So I converted `x=30478191278` to binary and got `11100011000101001000100101010101110` which I used as input
+- Then I tried to write and solve it manually:
+<img width="1225" height="2176" alt="iqtest(1)" src="https://github.com/user-attachments/assets/8073bc23-1699-4df9-962e-e02559d129cd" />
 
-```
-put codes & terminal outputs here using triple backticks
+- Thus I got the output and flag
 
-you may also use ```python for python codes for example
-```
 
 ## Flag:
 
 ```
-picoCTF{}
+nite{100010011000}
 ```
 
 ## Concepts learnt:
 
-- Include the new topics you've come across and explain them in brief
-- 
+- Manual Labour
 
 ## Notes:
 
-- Include any alternate tangents you went on while solving the challenge, including mistakes & other solutions you found.
-- 
+- 35 inputs are exhausting
 
 ## Resources:
 
-- Include the resources you've referred to with links. [example hyperlink](https://google.com)
+NA
 
 
 ***
