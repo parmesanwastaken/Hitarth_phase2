@@ -106,37 +106,63 @@ picoCTF{custom_d2cr0pt6d_dc499538}
 
 ***
 
-# 3. Challenge name
+# 3. miniRSA
 
-> Put in the challenge's description here
+> Let's decrypt this: ciphertext? Something seems a bit small.
 
 ## Solution:
 
-- Include as many steps as you can with your thought process
-- You **must** include images such as screenshots wherever relevant.
-
+- It was an RSA so I opened CTF101 page on it
+- The exploitation section talked about RsaCtfTool, so I decided to look into it
+- Also the wikipedia page had a section which said `e=3` is vulnerable and easy to crack using `eth root`
+- After glancing on RsaCtfTool, I realised there is a cube root attack, that takes input of `N` and `ciphertext`
+- So I used the command:
 ```
-put codes & terminal outputs here using triple backticks
-
-you may also use ```python for python codes for example
+RsaCtfTool -n 29331922499794985782735976045591164936683059380558950386560160105740343201513369939006307531165922708949619162698623675349030430859547825708994708321803705309459438099340427770580064400911431856656901982789948285309956111848686906152664473350940486507451771223435835260168971210087470894448460745593956840586530527915802541450092946574694809584880896601317519794442862977471129319781313161842056501715040555964011899589002863730868679527184420789010551475067862907739054966183120621407246398518098981106431219207697870293412176440482900183550467375190239898455201170831410460483829448603477361305838743852756938687673 -e 3 --attack cube_root --decrypt 2205316413931134031074603746928247799030155221252519872650073010782049179856976080512716237308882294226369300412719995904064931819531456392957957122459640736424089744772221933500860936331459280832211445548332429338572369823704784625368933
 ```
+- This gave me the output:
+```
+['/tmp/tmpvf7skubq']
+
+[*] Testing key /tmp/tmpvf6ksubq.
+[*] Performing cube_root attack on /tmp/tmpvf7skubq.
+[+] Time elapsed: 0.0008 sec.
+[+] Total time elapsed min,max,avg: 0.0008/0.0008/0.0008 sec.
+
+Results for /tmp/tmpvf7skubq:
+
+Decrypted data :
+HEX : 0x7069636f4354467b6e3333645f615f6c41726733725f655f63636161373737367d
+INT (big endian) : 13016382529449106065894479374027604750406953699090365388203708028670029596145277
+INT (little endian) : 14498533606165685119718956852327439022714916090771037807901302412009841646332272
+utf-8 : picoCTF{n33d_a_lArg3r_e_ccaa7776}
+STR : b'picoCTF{n33d_a_lArg3r_e_ccaa7776}'
+```
+- Thus I got the flag!
+
+
 
 ## Flag:
 
 ```
-picoCTF{}
+picoCTF{n33d_a_lArg3r_e_ccaa7776}
 ```
 
 ## Concepts learnt:
 
-- Include the new topics you've come across and explain them in brief
-- 
+- Learnt a lot about how RSA actually works
+- Learnt about different RSA vulnerabilities too
+- Even found out tools to automate this
 
 ## Notes:
 
-- Include any alternate tangents you went on while solving the challenge, including mistakes & other solutions you found.
-- 
+- Was extremely confused for a long time about what to do, as RSA seemed complex
+- Made mistakes such as finding and trying to attack using way more complex and time consuming method, thus wasted many hours on understanding RSA and attacks
+- Once I fixed that `e=3` should be the perfec method, I was still confused on which tool to use
+- After finding RsaCtfTool and reading the doc, it became simpler and automatically cracked it
 
 ## Resources:
 
-- Include the resources you've referred to with links. [example hyperlink](https://google.com)
+- Wikipedia page on [RSA](https://en.wikipedia.org/wiki/RSA_cryptosystem)
+- [RsaCtfTool](https://github.com/RsaCtfTool/RsaCtfTool)
+- CTF101 page briefing [RSA](https://ctf101.org/cryptography/what-is-rsa/)
