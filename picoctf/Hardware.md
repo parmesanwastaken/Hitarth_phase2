@@ -1,4 +1,4 @@
-# 1. IQ 
+# 1. IQ Test
 
 > let your input x = 30478191278. wrap your answer with nite{ } for the flag. As an example, entering x = 34359738368 gives (y0, ..., y11), so the flag would be nite{010000000011}.
 
@@ -8,7 +8,8 @@
 - It had combination of XOR, XNOR, NAND, AND, OR, NOR and NOT gate
 - So I converted `x=30478191278` to binary and got `11100011000101001000100101010101110` which I used as input
 - Then I tried to write and solve it manually:
-<img width="1225" height="2176" alt="iqtest(1)" src="https://github.com/user-attachments/assets/8073bc23-1699-4df9-962e-e02559d129cd" />
+<img width="1225" height="2176" alt="iqtest(1)" src="https://github.com/user-attachments/assets/fbe0a07d-6443-42eb-a82d-9f15d2fd89e8" />
+
 
 - Thus I got the output and flag
 
