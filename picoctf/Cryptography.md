@@ -1,38 +1,68 @@
-# 1. Challenge name
+# 1. rsa_oracle
 
-> Put in the challenge's description here
+> Can you abuse the oracle? An attacker was able to intercept communications between a bank and a fintech company. They managed to get the message (ciphertext) and the password that was used to encrypt the message. Additional details will be available after launching your challenge instance.
 
 ## Solution:
 
-- Include as many steps as you can with your thought process
-- You **must** include images such as screenshots wherever relevant.
-
+- First I connected through netcat to figure out the challenge
+- I realised I can decrypt and encrypt anything, but ofc direct password decrypt didn't work lol
+- So in order to leverage the oracle, I decided to understand how RSA even works
+- `(m^e)^d ~= m (mod n)`, this is what makes RSA work
+- I realised that it is multiplicative, i.e if I multiply 2 encrypted messages and later divide them after decrypting then I should get one input
+- But there is a catch, it converts ASCII to Hex, so I need to convert hex to decimal, then divide and then convert it back to ASCII
+- After I got the rough plan, I decided to follow all the steps
+- First I inputted `2`, and the oracle gave out:
 ```
-put codes & terminal outputs here using triple backticks
+*****************************************
+****************THE ORACLE***************
+*****************************************
+what should we do for you?
+E --> encrypt D --> decrypt.
+e
+enter text to encrypt (encoded length must be less than keysize): 2
+2
 
-you may also use ```python for python codes for example
+encoded cleartext as Hex m: 32
+
+ciphertext (m ^ e mod n) 4707619883686427763240856106433203231481313994680729548861877810439954027216515481620077982254465432294427487895036699854948548980054737181231034760249505
 ```
+- Then I used python script the multiply both encrypted texts (`2` and `password.enc`):
+```python
+a = 4707619883686427763240856106433203231481313994680729548861877810439954027216515481620077982254465432294427487895036699854948548980054737181231034760249505
+b = 2336150584734702647514724021470643922433811330098144930425575029773908475892259185520495303353109615046654428965662643241365308392679139063000973730368839
+
+result = a * b
+print(result)
+```
+- This gave me another encrypted output: `10997708943982761084006315359417483254965299487204584192712335192036789472336196626179282134890223733758401125471056267054908321079024432384222437910457194483711112753102678178170094968585207806212096960492328042941752878907452001886104974213833155189826877814877017136978779880432127774578986380439317174695`
+- I used the oracle again to decrypt this and got `11637011932000`
+- Now I converted `2` as an ASCII to decimal, which is `50`
+- Thus I divided that with decrypted number above and got `232740238640`
+- Now I converted this back to hex and got `3630663530`
+- I converted this hex to ASCII and got `60f50`, this was the password to `secret.enc`
+- According to hint I was supposed to use `openssl` to unencrypt the secret
+- Thus I used `openssl enc -aes-256-cbc -d -in secret.enc`, this asked me for a password and I inputted `60f50` and got the flag!
 
 ## Flag:
 
 ```
-picoCTF{}
+picoCTF{su((3ss_(r@ck1ng_r3@_60f50766}
 ```
 
 ## Concepts learnt:
 
-- Include the new topics you've come across and explain them in brief
-- 
+- I learnt how RSA works and that it is multiplicative
 
 ## Notes:
 
-- Include any alternate tangents you went on while solving the challenge, including mistakes & other solutions you found.
-- 
+- This was the HARDEST one yet
+- The key to solve it was figuring out RSA was multiplicative
+- There were other catches to like messing between hex, decimal and ascii values of outputs and inputs
 
 ## Resources:
 
-- Include the resources you've referred to with links. [example hyperlink](https://google.com)
-
+- CTF101 page on [RSA](https://ctf101.org/cryptography/what-is-rsa/)
+- [Hex to ASCII](https://www.rapidtables.com/convert/number/hex-to-ascii.html) and visa-verca
 
 ***
 
