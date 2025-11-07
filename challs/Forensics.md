@@ -44,40 +44,100 @@ nite{h1d3_4nd_s33k_but_w1th_st3g_sdfu9s8}
 ***
 
 
-# 2. Challenge name
+# 2. Nutrela Chunks
 
-> Put in the challenge's description here
+> One of my favorite foods is soya chunks. But as I was enjoying some Nutrela today, I noticed a few chunks weren’t quite right. Seems like something’s off with their structure. Could you help me fix these broken chunks so I can enjoy my meal again?
 
 ## Solution:
 
-- Include as many steps as you can with your thought process
-- You **must** include images such as screenshots wherever relevant.
-
+- Read the description and realised I need to edit the hex of this .png file
+- At first I was very confused what to change, whether it was image height width, header or some random thing
+- Then I opened the file and it was corrupted, also decided to search about png chunks
+- They talked about how there are 3 very important chunks, IHDR, ILAT and IEND
+- I also found out about `pngcheck` command, so I installed the package and ran it on `nutrela.png`
 ```
-put codes & terminal outputs here using triple backticks
+╰─ pngcheck nutrela.png
+zlib warning:  different version (expected 1.2.13, using 1.3)
 
-you may also use ```python for python codes for example
+nutrela.png  this is neither a PNG or JNG image nor a MNG stream
+ERROR: nutrela.png
 ```
+- I realised the header itself is incorrect so I fixed it by changing first 4 bytes:
+```
+original 4 bytes: 89 70 6E 67
+new 4 bytes: 89 50 4E 47
+```
+- Then I again ran `pngcheck`
+```
+╰─ pngcheck nutrela.png
+zlib warning:  different version (expected 1.2.13, using 1.3)
+
+nutrela.png  first chunk must be IHDR
+ERROR: nutrela.png
+```
+- I fixed IHDR by changing 4 bytes next to its string:
+```
+IHDR:
+original: 69 68 64 72
+new: 49 48 44 52
+```
+- Then I again ran command:
+```
+╰─ pngcheck nutrela.png
+zlib warning:  different version (expected 1.2.13, using 1.3)
+
+nutrela.png  illegal reserved-bit-set chunk idat
+ERROR: nutrela.png
+```
+- I fixed IDAT by changing 4 bytes next to its string:
+```
+IDAT:
+original: 69 64 61 74
+new: 49 44 41 54
+```
+- Then I again ran command:
+```
+╰─ pngcheck nutrela.png
+zlib warning:  different version (expected 1.2.13, using 1.3)
+
+nutrela.png  illegal reserved-bit-set chunk iend
+ERROR: nutrela.png
+```
+- I fixed IEND by changing 4 bytes next to its string:
+```
+IEND:
+original: 69 65 6E 64
+new: 49 45 4E 44
+```
+- Finally the file was fixed:
+```
+╰─ pngcheck nutrela.png
+zlib warning:  different version (expected 1.2.13, using 1.3)
+
+OK: nutrela.png (1000x1000, 24-bit RGB, non-interlaced, 82.0%).
+```
+- After I opened the file I found the flag!!
 
 ## Flag:
 
 ```
-picoCTF{}
+nite{n0w_y0u_kn0w_ab0ut_PNG_chunk5}
 ```
 
 ## Concepts learnt:
 
-- Include the new topics you've come across and explain them in brief
-- 
+- I learnt about different png chunks
+- Also that chunks are case sensitive
+- Also learnt about `pngcheck` command
 
 ## Notes:
 
-- Include any alternate tangents you went on while solving the challenge, including mistakes & other solutions you found.
-- 
+- At first I was confused what to change, but focusing just on chunks part as mentioned in description helped me a lot
 
 ## Resources:
 
-- Include the resources you've referred to with links. [example hyperlink](https://google.com)
+- PNG chunk doc: https://www.w3.org/TR/PNG-Chunks.html
+- `man pngcheck`
 
 
 ***
