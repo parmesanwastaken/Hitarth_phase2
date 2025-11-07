@@ -142,40 +142,49 @@ nite{n0w_y0u_kn0w_ab0ut_PNG_chunk5}
 
 ***
 
-# 3. Challenge name
+# 3. RAR of the Abyss
 
-> Put in the challenge's description here
+> Two philosophers peer into the networked abyss and swap a secret. Use the secret to decrypt the Abyss’ RAwR and pull your flag from the void.
 
 ## Solution:
 
-- Include as many steps as you can with your thought process
-- You **must** include images such as screenshots wherever relevant.
+- It was a `.pcap` file so I opened it in wireshark
+<img width="2560" height="1128" alt="image" src="https://github.com/user-attachments/assets/06b24133-54ac-4368-8607-b8660d89aed9" />
 
-```
-put codes & terminal outputs here using triple backticks
+- It showed multiple protocols and packets
+- I scrolled through them and some of them had conversations in them, so I found the password in a TCP packet's strings
+<img width="1257" height="251" alt="image" src="https://github.com/user-attachments/assets/969b9e7f-c4d2-4caa-8b67-e7795c3e7517" />
 
-you may also use ```python for python codes for example
-```
+- Also found packet which contained RAR file
+<img width="852" height="231" alt="image" src="https://github.com/user-attachments/assets/a69ec120-88cc-44e9-99ef-c3ae124295ac" />
+
+- Then I selected the RAR part and clicked on
+<img width="2131" height="796" alt="image" src="https://github.com/user-attachments/assets/8841337a-0d95-48d0-855d-085051662b30" />
+
+- Then I selected show as RAW and finally saved it as `ctf.rar`
+- When I tried to extract it, it asked for password, so I entered `b3y0ndG00dand3vil`
+- It extracted the RAR and I got `flag.txt` which had flag in it
+
 
 ## Flag:
 
 ```
-picoCTF{}
+nite{thus_sp0k3_th3_n3tw0rk_f0r3ns1cs_4n4lyst}
+
 ```
 
 ## Concepts learnt:
 
-- Include the new topics you've come across and explain them in brief
-- 
+- I learnt how to extract RAR file from TCP packets
+- Also learnt how to get info from packets and read strings/hex from it
 
 ## Notes:
 
-- Include any alternate tangents you went on while solving the challenge, including mistakes & other solutions you found.
-- 
+- First got confused by overwhelming packets, but after looking into all the data inside them, I realised I can just extract RAR and open it with given password
 
 ## Resources:
 
-- Include the resources you've referred to with links. [example hyperlink](https://google.com)
+- Wireshark: https://www.wireshark.org/#download
 
 
 ***
