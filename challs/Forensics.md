@@ -189,40 +189,57 @@ nite{thus_sp0k3_th3_n3tw0rk_f0r3ns1cs_4n4lyst}
 
 ***
 
-# 4. Challenge name
+# 4. NineTails
 
-> Put in the challenge's description here
+> Description: Looks like I got a little too clever and hid the flag as a password in Firefox, tucked away like one of NineTails’ many tails. Recover the "logins" and the "key4" and let it guide you to the flag. Hint: I named my Ninetails "j4gjesg4", quite a peculiar name isn't it?
 
 ## Solution:
 
-- Include as many steps as you can with your thought process
-- You **must** include images such as screenshots wherever relevant.
+- Extracted the rar and got a ad1 file
+- Searched about it and found out it is supposed to be opened in a program called `FTK imager`
+- After openening I looked through all the files and got lost, then properly read the description and realised I have to look for password in firefox folder
+- So I went in appdata and local, there I found firefox under mozilla folder but there was no sign of passwords or anything useful under username `j4gjesg4`
+- I searched and found they are actually stored in roaming, so I went there and got the db and json file
+<img width="1902" height="1108" alt="image" src="https://github.com/user-attachments/assets/55cd1a56-2234-4882-b38d-3b58ff65e5e6" />
 
+- Then I searched for a tool that can crack passwords using db file from the json
+- A tool called `firepwd` worked for me
+- It ccracked and showed me the output
 ```
-put codes & terminal outputs here using triple backticks
+clearText b'ab1ccd54c13b1573648a347a6e4c73dcc27af8cb8ad3c74c0808080808080808'
+decrypting login/password pairs
+https://www.rehack.xyz:b'warlocksmurf',b'GCTF{m0zarella'
+ https://ctftime.org:b'ilovecheese',b'CHEEEEEEEEEEEEEEEEEEEEEEEEEESE'
+https://www.reddit.com:b'bluelobster',b'_f1ref0x_'
+https://www.facebook.com:b'flag',b'SIKE'
+https://warlocksmurf.github.io:b'Man I Love Forensics',b'p4ssw0rd}'
+```
+- This showed the flag
 
-you may also use ```python for python codes for example
-```
 
 ## Flag:
 
 ```
-picoCTF{}
+GCTF{m0zarella_f1ref0x_p4ssw0rd}
 ```
 
 ## Concepts learnt:
 
-- Include the new topics you've come across and explain them in brief
-- 
+- Learnt how passwords are unsecurily stored in browsers
+- Learnt how to crack them if I just get access to read files on a computer
+- Also learnt about `ad1` image archives, which can be opened in programs to look through files
+- ~~learnt how annoying python can get~~
 
 ## Notes:
 
-- Include any alternate tangents you went on while solving the challenge, including mistakes & other solutions you found.
-- 
+- Wasted 30-45 minutes on exploring local folder, wondering why db and json files is not there, finally mozilla's own page came in clutch
+- Also spent ~1hr just finding a proper decryptor, some only scanned appdata folder and not specific directory, others had some version issues with deprecated module
+- `firepwd` didn't work locally either, but then after almost an hour of trying I ran it in virtual environment on WSL, finally that gave me the flag
 
 ## Resources:
 
-- Include the resources you've referred to with links. [example hyperlink](https://google.com)
+- Mozilla's page on where passwords are stored: https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data
+- [firepwd](https://github.com/lclevy/firepwd) tool
 
 
 ***
